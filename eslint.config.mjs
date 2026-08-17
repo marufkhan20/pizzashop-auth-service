@@ -9,5 +9,5 @@ export default defineConfig(
     files: ["**/*.{js,ts}"],
     extends: [js.configs.recommended, tseslint.configs.recommended],
   },
-  { ignores: ["dist", "node_modules"] },
+  { ignores: ["dist", "node_modules", "jest.config.js"] },
 );
