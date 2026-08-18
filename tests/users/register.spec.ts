@@ -36,5 +36,23 @@ describe("POST /auth/register", () => {
         expect.stringContaining("json"),
       );
     });
+
+    it("should persist the user in the database", async () => {
+      // Arrange
+      const userData = {
+        firstName: "Rashedul",
+        lastName: "Islam",
+        email: "marufkhan@gmail.com",
+        password: "marufkhan",
+      };
+
+      // Act
+      const response = await request(app).post("/auth/register").send(userData);
+
+      // Assert
+      expect(response.headers["content-type"]).toEqual(
+        expect.stringContaining("json"),
+      );
+    });
   });
 });

@@ -4,6 +4,7 @@ import express, {
   type Response,
 } from "express";
 import logger from "./config/logger.ts";
+import "reflect-metadata";
 import type { HttpError } from "http-errors";
 import authRouter from "./routes/auth.ts";
 
