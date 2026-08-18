@@ -4,6 +4,7 @@ import type { UserData } from "../types/index.ts";
 import { injectable, inject } from "inversify";
 import TYPES from "../config/types.ts";
 import createHttpError from "http-errors";
+import { Roles } from "../constants/index.ts";
 
 @injectable()
 export class UserService {
@@ -18,6 +19,7 @@ export class UserService {
         lastName,
         email,
         password,
+        role: Roles.CUSTOMER,
       });
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
