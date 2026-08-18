@@ -1,14 +1,11 @@
 import express from "express";
 import { AuthController } from "../controllers/AuthController.ts";
-import { UserService } from "../services/UserService.ts";
-import { AppDataSource } from "../config/data-source.ts";
-import { User } from "../entities/User.ts";
+import container from "../config/container.ts";
+import TYPES from "../config/types.ts";
 
 const router = express.Router();
 
-const userRepository = AppDataSource.getRepository(User);
-const userService = new UserService(userRepository);
-const authController = new AuthController(userService);
+const authController = container.get<AuthController>(TYPES.AuthController);
 
 router.post("/register", (req, res) => authController.register(req, res));
 

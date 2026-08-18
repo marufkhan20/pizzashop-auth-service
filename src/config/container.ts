@@ -1,0 +1,17 @@
+import { Container } from "inversify";
+import { AppDataSource } from "./data-source.ts";
+import { User } from "../entities/User.ts";
+import { UserService } from "../services/UserService.ts";
+import { AuthController } from "../controllers/AuthController.ts";
+import TYPES from "./types.ts";
+
+const container = new Container();
+
+container
+  .bind(TYPES.UserRepository)
+  .toDynamicValue(() => AppDataSource.getRepository(User));
+
+container.bind(TYPES.UserService).to(UserService);
+container.bind(TYPES.AuthController).to(AuthController);
+
+export default container;
