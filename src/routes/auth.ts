@@ -7,6 +7,8 @@ const router = express.Router();
 
 const authController = container.get<AuthController>(TYPES.AuthController);
 
-router.post("/register", (req, res) => authController.register(req, res));
+router.post("/register", (req, res, next) =>
+  authController.register(req, res, next),
+);
 
 export default router;

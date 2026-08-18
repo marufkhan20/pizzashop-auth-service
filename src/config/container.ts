@@ -4,6 +4,7 @@ import { User } from "../entities/User.ts";
 import { UserService } from "../services/UserService.ts";
 import { AuthController } from "../controllers/AuthController.ts";
 import TYPES from "./types.ts";
+import logger from "./logger.ts";
 
 const container = new Container();
 
@@ -13,5 +14,6 @@ container
 
 container.bind(TYPES.UserService).to(UserService);
 container.bind(TYPES.AuthController).to(AuthController);
+container.bind(TYPES.logger).toConstantValue(logger);
 
 export default container;
