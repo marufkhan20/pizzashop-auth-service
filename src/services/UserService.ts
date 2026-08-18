@@ -5,18 +5,18 @@ import { injectable, inject } from "inversify";
 import TYPES from "../config/types.ts";
 import createHttpError from "http-errors";
 import { Roles } from "../constants/index.ts";
-import bcrypt from "bcrypt";
+import type { HashService } from "./HashService.ts";
 
 @injectable()
 export class UserService {
   constructor(
     @inject(TYPES.UserRepository) private userRepository: Repository<User>,
+    @inject(TYPES.HashService) private hashService: HashService,
   ) {}
 
   async create({ firstName, lastName, email, password }: UserData) {
     // hash the password
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const hashedPassword = await this.hashService.create(password);
     try {
       return await this.userRepository.save({
         firstName,
