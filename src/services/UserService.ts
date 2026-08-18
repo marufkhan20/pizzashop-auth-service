@@ -5,6 +5,7 @@ import { injectable, inject } from "inversify";
 import TYPES from "../config/types.ts";
 import createHttpError from "http-errors";
 import { Roles } from "../constants/index.ts";
+import bcrypt from "bcrypt";
 
 @injectable()
 export class UserService {
@@ -13,12 +14,15 @@ export class UserService {
   ) {}
 
   async create({ firstName, lastName, email, password }: UserData) {
+    // hash the password
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
     try {
       return await this.userRepository.save({
         firstName,
         lastName,
         email,
-        password,
+        password: hashedPassword,
         role: Roles.CUSTOMER,
       });
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
