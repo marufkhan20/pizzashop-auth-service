@@ -15,6 +15,14 @@ export class UserService {
   ) {}
 
   async create({ firstName, lastName, email, password }: UserData) {
+    // check user existence using email
+    const user = await this.userRepository.findOne({ where: { email } });
+
+    if (user) {
+      const err = createHttpError(400, "Email is already exists!");
+      throw err;
+    }
+
     // hash the password
     const hashedPassword = await this.hashService.create(password);
     try {
