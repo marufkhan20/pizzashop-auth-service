@@ -4,6 +4,7 @@ import type { UserService } from "../services/UserService.ts";
 import { injectable, inject } from "inversify";
 import TYPES from "../config/types.ts";
 import type { Logger } from "winston";
+import { validationResult } from "express-validator";
 
 @injectable()
 export class AuthController {
@@ -13,7 +14,18 @@ export class AuthController {
   ) {}
 
   async register(req: RegisterUserRequest, res: Response, next: NextFunction) {
+    // check validation
+    const result = validationResult(req);
+
+    if (!result.isEmpty()) {
+      return res.status(400).json({
+        errors: result.array(),
+      });
+    }
+
+    // extract body data
     const { firstName, lastName, email, password } = req.body;
+
     this.logger.debug("New request to register a user", {
       firstName,
       lastName,
@@ -21,6 +33,7 @@ export class AuthController {
     });
 
     try {
+      // create new user
       const newUser = await this.userService.create({
         firstName,
         lastName,
