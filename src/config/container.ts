@@ -6,6 +6,7 @@ import { AuthController } from "../controllers/AuthController.ts";
 import TYPES from "./types.ts";
 import logger from "./logger.ts";
 import { HashService } from "../services/HashService.ts";
+import { TokenService } from "../services/TokenService.ts";
 
 const container = new Container();
 
@@ -15,6 +16,7 @@ container
 
 container.bind(TYPES.UserService).to(UserService);
 container.bind(TYPES.HashService).to(HashService);
+container.bind(TYPES.TokenService).to(TokenService);
 container.bind(TYPES.AuthController).to(AuthController);
 container.bind(TYPES.logger).toConstantValue(logger);
 
