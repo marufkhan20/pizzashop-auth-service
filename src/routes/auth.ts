@@ -7,6 +7,7 @@ import { AuthController } from "../controllers/AuthController.ts";
 import container from "../config/container.ts";
 import TYPES from "../config/types.ts";
 import registerValidator from "../validators/registerValidator.ts";
+import loginValidator from "../validators/loginValidator.ts";
 
 const router = express.Router();
 
@@ -17,6 +18,13 @@ router.post(
   registerValidator,
   (req: Request, res: Response, next: NextFunction) =>
     authController.register(req, res, next),
+);
+
+router.post(
+  "/login",
+  loginValidator,
+  (req: Request, res: Response, next: NextFunction) =>
+    authController.login(req, res, next),
 );
 
 export default router;

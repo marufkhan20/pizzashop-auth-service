@@ -43,4 +43,9 @@ export class UserService {
       throw error;
     }
   }
+
+  async findByEmail(email: string) {
+    // check user using email
+    return await this.userRepository.findOne({ where: { email } });
+  }
 }

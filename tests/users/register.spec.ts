@@ -232,7 +232,6 @@ describe("POST /auth/register", () => {
 
       // Act
       const response = await request(app).post("/auth/register").send(userData);
-      console.log("response", response.body);
 
       const userRepository = connection.getRepository(User);
       const users = await userRepository.find();
