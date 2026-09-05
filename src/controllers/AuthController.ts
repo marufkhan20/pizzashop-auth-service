@@ -10,6 +10,8 @@ import { validationResult } from "express-validator";
 import { sign, type JwtPayload } from "jsonwebtoken";
 import createHttpError from "http-errors";
 import { Config } from "../config/index.ts";
+import { AppDataSource } from "../config/data-source.ts";
+import { RefreshToken } from "../entities/RefreshToken.ts";
 
 @injectable()
 export class AuthController {
@@ -75,10 +77,19 @@ export class AuthController {
         issuer: "auth-service",
       });
 
+      // Persist the refresh token in the database
+      const MS_IN_A_YEAR = 1000 * 60 * 60 * 24 * 365; //  1 year
+      const refreshTokenRepository = AppDataSource.getRepository(RefreshToken);
+      const newRefreshToken = await refreshTokenRepository.save({
+        user: newUser,
+        expiresAt: new Date(Date.now() + MS_IN_A_YEAR), // 1 year
+      });
+
       const refreshToken = sign(payload, Config.REFRESH_TOKEN_SECRET, {
         algorithm: "HS256",
         expiresIn: "1y",
         issuer: "auth-service",
+        jwtid: String(newRefreshToken.id),
       });
 
       res.cookie("accessToken", accessToken, {
