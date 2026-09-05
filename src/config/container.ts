@@ -7,12 +7,17 @@ import TYPES from "./types.ts";
 import logger from "./logger.ts";
 import { HashService } from "../services/HashService.ts";
 import { TokenService } from "../services/TokenService.ts";
+import { RefreshToken } from "../entities/RefreshToken.ts";
 
 const container = new Container();
 
 container
   .bind(TYPES.UserRepository)
   .toDynamicValue(() => AppDataSource.getRepository(User));
+
+container
+  .bind(TYPES.RefreshTokenRepository)
+  .toDynamicValue(() => AppDataSource.getRepository(RefreshToken));
 
 container.bind(TYPES.UserService).to(UserService);
 container.bind(TYPES.HashService).to(HashService);

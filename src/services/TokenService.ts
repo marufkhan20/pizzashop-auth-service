@@ -7,10 +7,17 @@ import { sign, type JwtPayload } from "jsonwebtoken";
 import { Logger } from "winston";
 import TYPES from "../config/types.ts";
 import { Config } from "../config/index.ts";
+import type { User } from "../entities/User.ts";
+import { RefreshToken } from "../entities/RefreshToken.ts";
+import type { Repository } from "typeorm";
 
 @injectable()
 export class TokenService {
-  constructor(@inject(TYPES.logger) private logger: Logger) {}
+  constructor(
+    @inject(TYPES.logger) private logger: Logger,
+    @inject(TYPES.RefreshTokenRepository)
+    private refreshTokenRepository: Repository<RefreshToken>,
+  ) {}
 
   generateAccessToken(payload: JwtPayload): string {
     let privateKey: Buffer;
@@ -46,5 +53,15 @@ export class TokenService {
     });
 
     return refreshToken;
+  }
+
+  async persistRefreshToken(user: User) {
+    const MS_IN_A_YEAR = 1000 * 60 * 60 * 24 * 365; //  1 year
+    const newRefreshToken = await this.refreshTokenRepository.save({
+      user,
+      expiresAt: new Date(Date.now() + MS_IN_A_YEAR), // 1 year
+    });
+
+    return newRefreshToken;
   }
 }

@@ -5,8 +5,6 @@ import { injectable, inject } from "inversify";
 import TYPES from "../config/types.ts";
 import type { Logger } from "winston";
 import { validationResult } from "express-validator";
-import { AppDataSource } from "../config/data-source.ts";
-import { RefreshToken } from "../entities/RefreshToken.ts";
 import type { TokenService } from "../services/TokenService.ts";
 import type { JwtPayload } from "jsonwebtoken";
 
@@ -57,12 +55,8 @@ export class AuthController {
       const accessToken = this.tokenService.generateAccessToken(payload);
 
       // Persist the refresh token in the database
-      const MS_IN_A_YEAR = 1000 * 60 * 60 * 24 * 365; //  1 year
-      const refreshTokenRepository = AppDataSource.getRepository(RefreshToken);
-      const newRefreshToken = await refreshTokenRepository.save({
-        user: newUser,
-        expiresAt: new Date(Date.now() + MS_IN_A_YEAR), // 1 year
-      });
+      const newRefreshToken =
+        await this.tokenService.persistRefreshToken(newUser);
 
       const refreshToken = this.tokenService.generateRefreshToken({
         ...payload,
