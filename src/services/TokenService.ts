@@ -3,7 +3,9 @@ import path from "path";
 import createHttpError from "http-errors";
 
 import { inject, injectable } from "inversify";
-import { sign, type JwtPayload } from "jsonwebtoken";
+import jsonwebtoken, { type JwtPayload } from "jsonwebtoken";
+
+const { sign } = jsonwebtoken;
 import { Logger } from "winston";
 import TYPES from "../config/types.ts";
 import { Config } from "../config/index.ts";
