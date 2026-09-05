@@ -1,3 +1,5 @@
+import path from "path";
+import fs from "fs";
 import type { NextFunction, Response } from "express";
 import type { RegisterUserRequest } from "../types/index.ts";
 import type { UserService } from "../services/UserService.ts";
@@ -5,6 +7,9 @@ import { injectable, inject } from "inversify";
 import TYPES from "../config/types.ts";
 import type { Logger } from "winston";
 import { validationResult } from "express-validator";
+import { sign, type JwtPayload } from "jsonwebtoken";
+import createHttpError from "http-errors";
+import { Config } from "../config/index.ts";
 
 @injectable()
 export class AuthController {
@@ -42,6 +47,55 @@ export class AuthController {
       });
 
       this.logger.info("User hase been registered.", { id: newUser.id });
+
+      // generate access and refresh tokens
+      let privateKey: Buffer;
+
+      try {
+        privateKey = fs.readFileSync(
+          path.join(import.meta.dirname, "../../certs/private.pem"),
+        );
+      } catch (err) {
+        const error = createHttpError(
+          500,
+          "Failed to read private key for JWT signing",
+        );
+        this.logger.error(error.message, { error: err });
+        return next(error);
+      }
+
+      const payload: JwtPayload = {
+        sub: String(newUser.id),
+        role: newUser.role,
+      };
+
+      const accessToken = sign(payload, privateKey, {
+        algorithm: "RS256",
+        expiresIn: "1h",
+        issuer: "auth-service",
+      });
+
+      const refreshToken = sign(payload, Config.REFRESH_TOKEN_SECRET, {
+        algorithm: "HS256",
+        expiresIn: "1y",
+        issuer: "auth-service",
+      });
+
+      res.cookie("accessToken", accessToken, {
+        domain: "localhost",
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 1000 * 60 * 60, // 1 hour
+      });
+
+      res.cookie("refreshToken", refreshToken, {
+        domain: "localhost",
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 1000 * 60 * 60 * 24 * 365, // 365 days
+      });
 
       res.status(201).json({
         id: newUser.id,
