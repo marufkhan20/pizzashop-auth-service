@@ -10,6 +10,7 @@ import registerValidator from "../validators/registerValidator.ts";
 import loginValidator from "../validators/loginValidator.ts";
 import authenticate from "../middlewares/authenticate.ts";
 import type { AuthRequest } from "../types/index.ts";
+import validateRefreshToken from "../middlewares/validateRefreshToken.ts";
 
 const router = express.Router();
 
@@ -31,6 +32,13 @@ router.post(
 
 router.get("/self", authenticate, (req: Request, res: Response) =>
   authController.self(req as AuthRequest, res),
+);
+
+router.post(
+  "/refresh",
+  validateRefreshToken,
+  (req: Request, res: Response, next: NextFunction) =>
+    authController.refresh(req as AuthRequest, res, next),
 );
 
 export default router;
