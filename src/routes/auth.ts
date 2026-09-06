@@ -8,6 +8,8 @@ import container from "../config/container.ts";
 import TYPES from "../config/types.ts";
 import registerValidator from "../validators/registerValidator.ts";
 import loginValidator from "../validators/loginValidator.ts";
+import authenticate from "../middlewares/authenticate.ts";
+import type { AuthRequest } from "../types/index.ts";
 
 const router = express.Router();
 
@@ -25,6 +27,10 @@ router.post(
   loginValidator,
   (req: Request, res: Response, next: NextFunction) =>
     authController.login(req, res, next),
+);
+
+router.get("/self", authenticate, (req: Request, res: Response) =>
+  authController.self(req as AuthRequest, res),
 );
 
 export default router;

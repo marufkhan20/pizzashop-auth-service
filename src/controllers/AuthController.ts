@@ -1,5 +1,9 @@
 import type { NextFunction, Response } from "express";
-import type { LoginUserRequest, RegisterUserRequest } from "../types/index.ts";
+import type {
+  AuthRequest,
+  LoginUserRequest,
+  RegisterUserRequest,
+} from "../types/index.ts";
 import type { UserService } from "../services/UserService.ts";
 import { injectable, inject } from "inversify";
 import TYPES from "../config/types.ts";
@@ -166,5 +170,10 @@ export class AuthController {
     } catch (error) {
       next(error);
     }
+  }
+
+  async self(req: AuthRequest, res: Response) {
+    const user = await this.userService.findById(req.auth.sub);
+    res.json(user);
   }
 }
