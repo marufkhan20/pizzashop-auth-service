@@ -1,5 +1,5 @@
 import type { Repository } from "typeorm";
-import { User } from "../entities/User.ts";
+import type { User } from "../entities/User.ts";
 import type { UserData } from "../types/index.ts";
 import { injectable, inject } from "inversify";
 import TYPES from "../config/types.ts";

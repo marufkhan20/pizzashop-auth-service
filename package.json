@@ -23,7 +23,9 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --watchAll --runInBand",
     "prepare": "husky",
     "start": "tsx src/index.ts",
-    "typeorm": "typeorm-ts-node-commonjs"
+    "migration:generate": "node scripts/generateMigration.js",
+    "migration:run": "typeorm-ts-node-esm migration:run",
+    "migration:create": "typeorm-ts-node-esm migration:create"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

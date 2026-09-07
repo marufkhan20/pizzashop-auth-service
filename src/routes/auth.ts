@@ -3,7 +3,7 @@ import express, {
   type Request,
   type Response,
 } from "express";
-import { AuthController } from "../controllers/AuthController.ts";
+import type { AuthController } from "../controllers/AuthController.ts";
 import container from "../config/container.ts";
 import TYPES from "../config/types.ts";
 import registerValidator from "../validators/registerValidator.ts";

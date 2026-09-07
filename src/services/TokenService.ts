@@ -6,11 +6,11 @@ import { inject, injectable } from "inversify";
 import jsonwebtoken, { type JwtPayload } from "jsonwebtoken";
 
 const { sign } = jsonwebtoken;
-import { Logger } from "winston";
+import type { Logger } from "winston";
 import TYPES from "../config/types.ts";
 import { Config } from "../config/index.ts";
 import type { User } from "../entities/User.ts";
-import { RefreshToken } from "../entities/RefreshToken.ts";
+import type { RefreshToken } from "../entities/RefreshToken.ts";
 import type { Repository } from "typeorm";
 
 @injectable()
