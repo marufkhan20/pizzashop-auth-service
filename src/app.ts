@@ -1,13 +1,14 @@
+import cookieParser from "cookie-parser";
 import express, {
   type NextFunction,
   type Request,
   type Response,
 } from "express";
-import logger from "./config/logger.ts";
-import "reflect-metadata";
 import type { HttpError } from "http-errors";
+import "reflect-metadata";
+import logger from "./config/logger.ts";
 import authRouter from "./routes/auth.ts";
-import cookieParser from "cookie-parser";
+import tenantRouter from "./routes/tenant.ts";
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.get("/", async (_req, res) => {
 });
 
 app.use("/auth", authRouter);
+app.use("/tenants", tenantRouter);
 
 // global error handler
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
