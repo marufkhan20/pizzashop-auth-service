@@ -6,7 +6,7 @@ import express, {
 import container from "../config/container.ts";
 import TYPES from "../config/types.ts";
 import type { TenantController } from "../controllers/TenantController.ts";
-import registerValidator from "../validators/registerValidator.ts";
+import authenticate from "../middlewares/authenticate.ts";
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ const tenantController = container.get<TenantController>(
 
 router.post(
   "/",
-  registerValidator,
+  authenticate,
   (req: Request, res: Response, next: NextFunction) =>
     tenantController.create(req, res, next),
 );
