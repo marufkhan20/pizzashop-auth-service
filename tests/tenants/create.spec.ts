@@ -103,5 +103,32 @@ describe("POST /tenants", () => {
       // Assert
       expect(tenants).toHaveLength(0);
     });
+
+    it("should return 403 if user is not an admin", async () => {
+      // Arrange
+      const managerToken = jwks.token({
+        sub: "1",
+        roles: Roles.MANAGER,
+      });
+
+      const tenantData = {
+        name: "PizzaBurg",
+        address: "Maijdi, Noakhali, BD",
+      };
+
+      // Act
+      const response = await request(app)
+        .post("/tenants")
+        .set("Cookie", [`accessToken=${managerToken}`])
+        .send(tenantData);
+
+      expect(response.statusCode).toBe(403);
+
+      const tenantRepository = connection.getRepository(Tenant);
+      const tenants = await tenantRepository.find();
+
+      // Assert
+      expect(tenants).toHaveLength(0);
+    });
   });
 });
