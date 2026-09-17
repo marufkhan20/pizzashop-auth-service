@@ -43,6 +43,9 @@ describe("POST /users", () => {
 
   describe("Given all fields", () => {
     it("should persist user in the database ", async () => {
+      // Create tenant first
+      const tenant = await createTenant(connection.getRepository(Tenant));
+
       // Generate Token
       const adminToken = jwks.token({
         sub: "1",
@@ -55,7 +58,8 @@ describe("POST /users", () => {
         lastName: "Islam",
         email: "marufkhan@gmail.com",
         password: "marufkhan",
-        tenantId: 1,
+        tenantId: tenant.id,
+        role: Roles.MANAGER,
       };
 
       await request(app)
@@ -71,6 +75,9 @@ describe("POST /users", () => {
     });
 
     it("should create a manager user ", async () => {
+      // Create tenant first
+      const tenant = await createTenant(connection.getRepository(Tenant));
+
       // Generate Token
       const adminToken = jwks.token({
         sub: "1",
@@ -83,7 +90,8 @@ describe("POST /users", () => {
         lastName: "Islam",
         email: "marufkhan@gmail.com",
         password: "marufkhan",
-        tenantId: 1,
+        tenantId: tenant.id,
+        role: Roles.MANAGER,
       };
 
       await request(app)

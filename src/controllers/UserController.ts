@@ -4,7 +4,6 @@ import createHttpError from "http-errors";
 import { inject, injectable } from "inversify";
 import type { Logger } from "winston";
 import TYPES from "../config/types.ts";
-import { Roles } from "../constants/index.ts";
 import type { UserService } from "../services/UserService.ts";
 import type { UpdateUserRequest, UserQueryParams } from "../types/index.ts";
 
@@ -17,7 +16,8 @@ export class UserController {
 
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const { firstName, lastName, email, password } = req.body || {};
+      const { firstName, lastName, email, password, role, tenantId } =
+        req.body || {};
 
       this.logger.info("Create a new user request", {
         firstName,
@@ -30,7 +30,8 @@ export class UserController {
         lastName,
         email,
         password,
-        role: Roles.MANAGER,
+        role,
+        tenantId,
       });
 
       this.logger.info("User has been created", { id: user.id });

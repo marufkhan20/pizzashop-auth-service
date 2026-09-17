@@ -36,12 +36,14 @@ router.patch(
   (req: CreateTenantRequest, res: Response, next: NextFunction) =>
     tenantController.update(req, res, next) as unknown as RequestHandler,
 );
+
 router.get(
   "/",
   listUsersValidator,
   (req: Request, res: Response, next: NextFunction) =>
     tenantController.getAll(req, res, next) as unknown as RequestHandler,
 );
+
 router.get(
   "/:id",
   authenticate as RequestHandler,
@@ -49,6 +51,11 @@ router.get(
   (req, res, next) =>
     tenantController.getOne(req, res, next) as unknown as RequestHandler,
 );
+
+router.patch("/:id", authenticate, canAccess([Roles.ADMIN]), (req, res, next) =>
+  tenantController.update(req, res, next),
+);
+
 router.delete(
   "/:id",
   authenticate as RequestHandler,

@@ -17,7 +17,14 @@ export class UserService {
     @inject(TYPES.HashService) private hashService: HashService,
   ) {}
 
-  async create({ firstName, lastName, email, password, role }: UserData) {
+  async create({
+    firstName,
+    lastName,
+    email,
+    password,
+    role,
+    tenantId,
+  }: UserData) {
     // check user existence using email
     const user = await this.userRepository.findOne({ where: { email } });
 
@@ -35,6 +42,7 @@ export class UserService {
         email,
         password: hashedPassword,
         role,
+        tenant: tenantId ? { id: Number(tenantId) } : null,
       });
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
@@ -47,9 +55,20 @@ export class UserService {
     }
   }
 
-  async findByEmail(email: string) {
-    // check user using email
-    return await this.userRepository.findOne({ where: { email } });
+  async findByEmailWithPassword(email: string) {
+    return await this.userRepository.findOne({
+      where: {
+        email,
+      },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        role: true,
+        password: true,
+      },
+    });
   }
 
   async findById(id: number) {

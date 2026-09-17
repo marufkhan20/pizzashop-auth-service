@@ -1,11 +1,11 @@
 import request from "supertest";
-import app from "../../src/app.ts";
-import { User } from "../../src/entities/User.ts";
 import type { DataSource } from "typeorm";
+import app from "../../src/app.ts";
 import { AppDataSource } from "../../src/config/data-source.ts";
 import { Roles } from "../../src/constants/index.ts";
-import { isJWT } from "../utils/index.ts";
 import { RefreshToken } from "../../src/entities/RefreshToken.ts";
+import { User } from "../../src/entities/User.ts";
+import { isJWT } from "../utils/index.ts";
 
 describe("POST /auth/register", () => {
   let connection: DataSource;
@@ -131,7 +131,7 @@ describe("POST /auth/register", () => {
 
       // Assert
       const userRepository = connection.getRepository(User);
-      const users = await userRepository.find();
+      const users = await userRepository.find({ select: { password: true } });
 
       expect(users[0]!.password).not.toBe(userData.password);
       expect(users[0]!.password).toHaveLength(60);
