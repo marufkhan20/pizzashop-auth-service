@@ -1,18 +1,19 @@
 import type { NextFunction, Response } from "express";
+import { validationResult } from "express-validator";
+import createHttpError from "http-errors";
+import { inject, injectable } from "inversify";
+import type { JwtPayload } from "jsonwebtoken";
+import type { Logger } from "winston";
+import TYPES from "../config/types.ts";
+import { Roles } from "../constants/index.ts";
+import type { HashService } from "../services/HashService.ts";
+import type { TokenService } from "../services/TokenService.ts";
+import type { UserService } from "../services/UserService.ts";
 import type {
   AuthRequest,
   LoginUserRequest,
   RegisterUserRequest,
 } from "../types/index.ts";
-import type { UserService } from "../services/UserService.ts";
-import { injectable, inject } from "inversify";
-import TYPES from "../config/types.ts";
-import type { Logger } from "winston";
-import { validationResult } from "express-validator";
-import type { TokenService } from "../services/TokenService.ts";
-import type { JwtPayload } from "jsonwebtoken";
-import createHttpError from "http-errors";
-import type { HashService } from "../services/HashService.ts";
 
 @injectable()
 export class AuthController {
@@ -49,6 +50,7 @@ export class AuthController {
         lastName,
         email,
         password,
+        role: Roles.CUSTOMER,
       });
 
       this.logger.info("User hase been registered.", { id: newUser.id });

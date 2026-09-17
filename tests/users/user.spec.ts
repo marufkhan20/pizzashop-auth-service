@@ -1,13 +1,13 @@
-import type { DataSource } from "typeorm";
-import { AppDataSource } from "../../src/config/data-source.ts";
-import request from "supertest";
-import app from "../../src/app.ts";
 import { createJWKSMock } from "mock-jwks";
 import { setupServer } from "msw/node";
-import { User } from "../../src/entities/User.ts";
+import request from "supertest";
+import type { DataSource } from "typeorm";
+import app from "../../src/app.ts";
+import { AppDataSource } from "../../src/config/data-source.ts";
 import { Roles } from "../../src/constants/index.ts";
+import { User } from "../../src/entities/User.ts";
 
-describe("POST /auth/self", () => {
+describe("GET /auth/self", () => {
   let connection: DataSource;
   let jwks: ReturnType<typeof createJWKSMock>;
   let mswServer: ReturnType<typeof setupServer>;

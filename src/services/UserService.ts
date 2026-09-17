@@ -1,10 +1,9 @@
+import createHttpError from "http-errors";
+import { inject, injectable } from "inversify";
 import type { Repository } from "typeorm";
+import TYPES from "../config/types.ts";
 import type { User } from "../entities/User.ts";
 import type { UserData } from "../types/index.ts";
-import { injectable, inject } from "inversify";
-import TYPES from "../config/types.ts";
-import createHttpError from "http-errors";
-import { Roles } from "../constants/index.ts";
 import type { HashService } from "./HashService.ts";
 
 @injectable()
@@ -14,7 +13,7 @@ export class UserService {
     @inject(TYPES.HashService) private hashService: HashService,
   ) {}
 
-  async create({ firstName, lastName, email, password }: UserData) {
+  async create({ firstName, lastName, email, password, role }: UserData) {
     // check user existence using email
     const user = await this.userRepository.findOne({ where: { email } });
 
@@ -31,7 +30,7 @@ export class UserService {
         lastName,
         email,
         password: hashedPassword,
-        role: Roles.CUSTOMER,
+        role,
       });
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {

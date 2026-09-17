@@ -1,6 +1,7 @@
 import { Container } from "inversify";
 import { AuthController } from "../controllers/AuthController.ts";
 import { TenantController } from "../controllers/TenantController.ts";
+import { UserController } from "../controllers/UserController.ts";
 import { RefreshToken } from "../entities/RefreshToken.ts";
 import { Tenant } from "../entities/Tenant.ts";
 import { User } from "../entities/User.ts";
@@ -34,5 +35,6 @@ container.bind(TYPES.AuthController).to(AuthController);
 container.bind(TYPES.logger).toConstantValue(logger);
 
 container.bind(TYPES.TenantController).to(TenantController);
+container.bind(TYPES.UserController).to(UserController);
 
 export default container;
