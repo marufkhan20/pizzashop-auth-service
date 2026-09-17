@@ -1,9 +1,12 @@
 import type { NextFunction, Request, Response } from "express";
+import { matchedData, validationResult } from "express-validator";
+import createHttpError from "http-errors";
 import { inject, injectable } from "inversify";
 import type { Logger } from "winston";
 import TYPES from "../config/types.ts";
 import { Roles } from "../constants/index.ts";
 import type { UserService } from "../services/UserService.ts";
+import type { UpdateUserRequest, UserQueryParams } from "../types/index.ts";
 
 @injectable()
 export class UserController {
@@ -38,98 +41,103 @@ export class UserController {
     }
   }
 
-  //   async update(req: CreateTenantRequest, res: Response, next: NextFunction) {
-  //     // Validation
-  //     const result = validationResult(req);
-  //     if (!result.isEmpty()) {
-  //       return res.status(400).json({ errors: result.array() });
-  //     }
+  async update(req: UpdateUserRequest, res: Response, next: NextFunction) {
+    // In our project: We are not allowing user to change the email id since it is used as username
+    // In our project: We are not allowing admin user to change others password
 
-  //     const { name, address } = req.body;
-  //     const tenantId = req.params.id;
+    // Validation
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      return res.status(400).json({ errors: result.array() });
+    }
 
-  //     if (isNaN(Number(tenantId))) {
-  //       next(createHttpError(400, "Invalid url param."));
-  //       return;
-  //     }
+    const { firstName, lastName, role, email, tenantId } = req.body;
+    const userId = req.params.id;
 
-  //     this.logger.debug("Request for updating a tenant", req.body);
+    if (isNaN(Number(userId))) {
+      next(createHttpError(400, "Invalid url param."));
+      return;
+    }
 
-  //     try {
-  //       await this.tenantService.update(Number(tenantId), {
-  //         name,
-  //         address,
-  //       });
+    this.logger.debug("Request for updating a user", req.body);
 
-  //       this.logger.info("Tenant has been updated", { id: tenantId });
+    try {
+      await this.userService.update(Number(userId), {
+        firstName,
+        lastName,
+        role,
+        email,
+        tenantId,
+      });
 
-  //       res.json({ id: Number(tenantId) });
-  //     } catch (err) {
-  //       next(err);
-  //     }
-  //   }
+      this.logger.info("User has been updated", { id: userId });
 
-  //   async getAll(req: Request, res: Response, next: NextFunction) {
-  //     const validatedQuery = matchedData(req, { onlyValidData: true });
-  //     try {
-  //       const [tenants, count] = await this.tenantService.getAll(
-  //         validatedQuery as TenantQueryParams,
-  //       );
+      res.json({ id: Number(userId) });
+    } catch (err) {
+      next(err);
+    }
+  }
 
-  //       this.logger.info("All tenant have been fetched");
-  //       res.json({
-  //         currentPage: validatedQuery.currentPage as number,
-  //         perPage: validatedQuery.perPage as number,
-  //         total: count,
-  //         data: tenants,
-  //       });
+  async getAll(req: Request, res: Response, next: NextFunction) {
+    const validatedQuery = matchedData(req, { onlyValidData: true });
 
-  //       res.json(tenants);
-  //     } catch (err) {
-  //       next(err);
-  //     }
-  //   }
+    try {
+      const [users, count] = await this.userService.getAll(
+        validatedQuery as UserQueryParams,
+      );
 
-  //   async getOne(req: Request, res: Response, next: NextFunction) {
-  //     const tenantId = req.params.id;
+      this.logger.info("All users have been fetched");
+      res.json({
+        currentPage: validatedQuery.currentPage as number,
+        perPage: validatedQuery.perPage as number,
+        total: count,
+        data: users,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 
-  //     if (isNaN(Number(tenantId))) {
-  //       next(createHttpError(400, "Invalid url param."));
-  //       return;
-  //     }
+  async getOne(req: Request, res: Response, next: NextFunction) {
+    const userId = req.params.id;
 
-  //     try {
-  //       const tenant = await this.tenantService.getById(Number(tenantId));
+    if (isNaN(Number(userId))) {
+      next(createHttpError(400, "Invalid url param."));
+      return;
+    }
 
-  //       if (!tenant) {
-  //         next(createHttpError(400, "Tenant does not exist."));
-  //         return;
-  //       }
+    try {
+      const user = await this.userService.findById(Number(userId));
 
-  //       this.logger.info("Tenant has been fetched");
-  //       res.json(tenant);
-  //     } catch (err) {
-  //       next(err);
-  //     }
-  //   }
+      if (!user) {
+        next(createHttpError(400, "User does not exist."));
+        return;
+      }
 
-  //   async destroy(req: Request, res: Response, next: NextFunction) {
-  //     const tenantId = req.params.id;
+      this.logger.info("User has been fetched", { id: user.id });
+      res.json(user);
+    } catch (err) {
+      next(err);
+    }
+  }
 
-  //     if (isNaN(Number(tenantId))) {
-  //       next(createHttpError(400, "Invalid url param."));
-  //       return;
-  //     }
+  async destroy(req: Request, res: Response, next: NextFunction) {
+    const userId = req.params.id;
 
-  //     try {
-  //       await this.tenantService.deleteById(Number(tenantId));
+    if (isNaN(Number(userId))) {
+      next(createHttpError(400, "Invalid url param."));
+      return;
+    }
 
-  //       this.logger.info("Tenant has been deleted", {
-  //         id: Number(tenantId),
-  //       });
-  //       res.json({ id: Number(tenantId) });
-  //     } catch (err) {
-  //       next(err);
-  //     }
-  //   }
+    try {
+      await this.userService.deleteById(Number(userId));
+
+      this.logger.info("User has been deleted", {
+        id: Number(userId),
+      });
+      res.json({ id: Number(userId) });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
