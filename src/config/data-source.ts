@@ -1,3 +1,5 @@
+import { fileURLToPath } from "node:url";
+import path from "node:path";
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { RefreshToken } from "../entities/RefreshToken.ts";
@@ -8,6 +10,8 @@ import { RenameTables1788742141893 } from "../migration/1788742141893-rename_tab
 import { CreateTenantsTable1788749805021 } from "../migration/1788749805021-create_tenants_table.ts";
 import { AddTenantIdForeignKey1788750144150 } from "../migration/1788750144150-add_tenantId_foreign_key.ts";
 import { Config } from "./index.ts";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -21,7 +25,7 @@ export const AppDataSource = new DataSource({
   entities:
     Config.NODE_ENV === "test"
       ? [User, RefreshToken, Tenant]
-      : ["src/entities/*.ts"],
+      : [path.join(__dirname, "../entities/*.{ts,js}")],
   migrations:
     Config.NODE_ENV === "test"
       ? [
@@ -30,6 +34,6 @@ export const AppDataSource = new DataSource({
           CreateTenantsTable1788749805021,
           AddTenantIdForeignKey1788750144150,
         ]
-      : ["src/migration/*.ts"],
+      : [path.join(__dirname, "../migration/*.{ts,js}")],
   subscribers: [],
 });

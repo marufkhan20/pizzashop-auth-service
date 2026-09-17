@@ -10,7 +10,8 @@
     "target": "esnext",
     "types": ["jest", "node"],
     "allowImportingTsExtensions": true,
-    "noEmit": true,
+    "rewriteRelativeImportExtensions": true,
+    "noEmit": false,
     // For nodejs:
     "lib": ["ES6"],
     // "types": ["node"],
@@ -44,5 +45,6 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "strictPropertyInitialization": false
-  }
+  },
+  "exclude": ["**/*.spec.ts", "tests"]
 }
