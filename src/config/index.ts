@@ -18,6 +18,7 @@ const {
   DB_NAME,
   REFRESH_TOKEN_SECRET,
   JWKS_URI,
+  PRIVATE_KEY,
 } = process.env;
 
 const requiredEnvVars = {
@@ -28,6 +29,7 @@ const requiredEnvVars = {
   DB_NAME,
   REFRESH_TOKEN_SECRET,
   JWKS_URI,
+  PRIVATE_KEY,
 };
 
 for (const [key, value] of Object.entries(requiredEnvVars)) {

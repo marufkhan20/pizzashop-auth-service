@@ -1,17 +1,15 @@
-import fs from "fs";
-import path from "path";
 import createHttpError from "http-errors";
 
 import { inject, injectable } from "inversify";
 import jsonwebtoken, { type JwtPayload } from "jsonwebtoken";
+import type { Repository } from "typeorm";
+import type { Logger } from "winston";
+import { Config } from "../config/index.ts";
+import TYPES from "../config/types.ts";
+import type { RefreshToken } from "../entities/RefreshToken.ts";
+import type { User } from "../entities/User.ts";
 
 const { sign } = jsonwebtoken;
-import type { Logger } from "winston";
-import TYPES from "../config/types.ts";
-import { Config } from "../config/index.ts";
-import type { User } from "../entities/User.ts";
-import type { RefreshToken } from "../entities/RefreshToken.ts";
-import type { Repository } from "typeorm";
 
 @injectable()
 export class TokenService {
@@ -22,12 +20,10 @@ export class TokenService {
   ) {}
 
   generateAccessToken(payload: JwtPayload): string {
-    let privateKey: Buffer;
+    let privateKey: string;
 
     try {
-      privateKey = fs.readFileSync(
-        path.join(import.meta.dirname, "../../certs/private.pem"),
-      );
+      privateKey = Config.PRIVATE_KEY;
     } catch (err) {
       const error = createHttpError(
         500,
