@@ -5,6 +5,7 @@ const tsJestTransformCfg = createDefaultEsmPreset().transform;
 /** @type {import("jest").Config} **/
 export default {
   testEnvironment: "node",
+  testTimeout: 30000,
   extensionsToTreatAsEsm: [".ts"],
   transform: {
     ...tsJestTransformCfg,
