@@ -1,0 +1,18 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "feature1",
+    "main",
+    "update-readme"
+  ],
+  "parent": {
+    "feature1": "main",
+    "main": null,
+    "update-readme": "main"
+  },
+  "order": [
+    "main",
+    "feature1",
+    "update-readme"
+  ]
+}
