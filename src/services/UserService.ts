@@ -1,7 +1,8 @@
 import createHttpError from "http-errors";
 import { inject, injectable } from "inversify";
-import { Brackets, type Repository } from "typeorm";
+import { Brackets, QueryFailedError, type Repository } from "typeorm";
 import TYPES from "../config/types.ts";
+import { Roles } from "../constants/index.ts";
 import type { User } from "../entities/User.ts";
 import type {
   LimitedUserData,
@@ -9,6 +10,9 @@ import type {
   UserQueryParams,
 } from "../types/index.ts";
 import type { HashService } from "./HashService.ts";
+
+// Postgres error code for a unique-constraint violation.
+const POSTGRES_UNIQUE_VIOLATION_CODE = "23505";
 
 @injectable()
 export class UserService {
@@ -52,6 +56,45 @@ export class UserService {
       );
 
       throw error;
+    }
+  }
+
+  //  Create admin user
+  async createAdminUser({
+    firstName,
+    lastName,
+    email,
+    password,
+  }: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+  }) {
+    const hashedPassword = await this.hashService.create(password);
+
+    try {
+      await this.userRepository.insert({
+        firstName,
+        lastName,
+        email,
+        password: hashedPassword,
+        role: Roles.ADMIN,
+        tenant: null,
+      });
+      return { created: true };
+    } catch (err) {
+      const isUniqueViolation =
+        err instanceof QueryFailedError &&
+        (err as unknown as { code?: string }).code ===
+          POSTGRES_UNIQUE_VIOLATION_CODE;
+
+      if (isUniqueViolation) {
+        // Another instance already created the admin — nothing to do.
+        return { created: false };
+      }
+
+      throw err;
     }
   }
 

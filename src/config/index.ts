@@ -19,6 +19,10 @@ const {
   REFRESH_TOKEN_SECRET,
   JWKS_URI,
   PRIVATE_KEY,
+  ADMIN_EMAIL,
+  ADMIN_PASSWORD,
+  ADMIN_FIRST_NAME,
+  ADMIN_LAST_NAME,
 } = process.env;
 
 const requiredEnvVars = {
@@ -30,6 +34,10 @@ const requiredEnvVars = {
   REFRESH_TOKEN_SECRET,
   JWKS_URI,
   PRIVATE_KEY,
+  ADMIN_EMAIL,
+  ADMIN_PASSWORD,
+  ADMIN_FIRST_NAME,
+  ADMIN_LAST_NAME,
 };
 
 for (const [key, value] of Object.entries(requiredEnvVars)) {
