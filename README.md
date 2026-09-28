@@ -61,63 +61,63 @@ The service starts on the port defined by `PORT` in your env file.
 
 ## Environment Variables
 
-| Variable                | Description                                      |
-| ------------------------ | ------------------------------------------------- |
-| `PORT`                  | Port the HTTP server listens on                  |
-| `DB_HOST`               | PostgreSQL host                                  |
-| `DB_PORT`               | PostgreSQL port                                  |
-| `DB_USERNAME`           | PostgreSQL username                              |
-| `DB_PASSWORD`           | PostgreSQL password                              |
-| `DB_NAME`               | PostgreSQL database name                         |
-| `REFRESH_TOKEN_SECRET`  | Secret used to sign refresh tokens                |
-| `JWKS_URI`              | URI where the JWKS (public keys) are served       |
+| Variable               | Description                                 |
+| ---------------------- | ------------------------------------------- |
+| `PORT`                 | Port the HTTP server listens on             |
+| `DB_HOST`              | PostgreSQL host                             |
+| `DB_PORT`              | PostgreSQL port                             |
+| `DB_USERNAME`          | PostgreSQL username                         |
+| `DB_PASSWORD`          | PostgreSQL password                         |
+| `DB_NAME`              | PostgreSQL database name                    |
+| `REFRESH_TOKEN_SECRET` | Secret used to sign refresh tokens          |
+| `JWKS_URI`             | URI where the JWKS (public keys) are served |
 
 ## Available Scripts
 
-| Script                     | Description                                   |
-| --------------------------- | ---------------------------------------------- |
-| `npm run dev`               | Run the server in watch mode                   |
-| `npm run build`              | Compile TypeScript to `dist/`                  |
-| `npm start`                  | Run the compiled/entry server                  |
-| `npm test`                   | Run the Jest test suite with coverage          |
-| `npm run test:watch`         | Run tests in watch mode                        |
-| `npm run lint` / `lint:fix`  | Lint the codebase                              |
-| `npm run format:check` / `format:fix` | Check/format code with Prettier      |
-| `npm run migration:generate` | Generate a TypeORM migration from entity changes |
-| `npm run migration:create`   | Create a new empty migration                   |
-| `npm run migration:run`      | Run pending migrations                         |
+| Script                                | Description                                      |
+| ------------------------------------- | ------------------------------------------------ |
+| `npm run dev`                         | Run the server in watch mode                     |
+| `npm run build`                       | Compile TypeScript to `dist/`                    |
+| `npm start`                           | Run the compiled/entry server                    |
+| `npm test`                            | Run the Jest test suite with coverage            |
+| `npm run test:watch`                  | Run tests in watch mode                          |
+| `npm run lint` / `lint:fix`           | Lint the codebase                                |
+| `npm run format:check` / `format:fix` | Check/format code with Prettier                  |
+| `npm run migration:generate`          | Generate a TypeORM migration from entity changes |
+| `npm run migration:create`            | Create a new empty migration                     |
+| `npm run migration:run`               | Run pending migrations                           |
 
 ## API Endpoints
 
 ### Auth (`/auth`)
 
 | Method | Endpoint         | Description                              | Auth required |
-| ------ | ---------------- | ----------------------------------------- | -------------- |
-| POST   | `/auth/register` | Register a new user                       | No             |
-| POST   | `/auth/login`    | Log in and receive access/refresh tokens  | No             |
-| GET    | `/auth/self`     | Get the currently authenticated user      | Yes            |
-| POST   | `/auth/refresh`  | Refresh the access token                  | Refresh token  |
-| POST   | `/auth/logout`   | Log out and invalidate the refresh token  | Yes            |
+| ------ | ---------------- | ---------------------------------------- | ------------- |
+| POST   | `/auth/register` | Register a new user                      | No            |
+| POST   | `/auth/login`    | Log in and receive access/refresh tokens | No            |
+| GET    | `/auth/self`     | Get the currently authenticated user     | Yes           |
+| POST   | `/auth/refresh`  | Refresh the access token                 | Refresh token |
+| POST   | `/auth/logout`   | Log out and invalidate the refresh token | Yes           |
 
 ### Users (`/users`) — Admin only
 
-| Method | Endpoint     | Description        |
-| ------ | ------------ | ------------------- |
-| POST   | `/users`     | Create a user        |
-| GET    | `/users`     | List users            |
-| GET    | `/users/:id` | Get a user by ID     |
-| PATCH  | `/users/:id` | Update a user         |
-| DELETE | `/users/:id` | Delete a user         |
+| Method | Endpoint     | Description      |
+| ------ | ------------ | ---------------- |
+| POST   | `/users`     | Create a user    |
+| GET    | `/users`     | List users       |
+| GET    | `/users/:id` | Get a user by ID |
+| PATCH  | `/users/:id` | Update a user    |
+| DELETE | `/users/:id` | Delete a user    |
 
 ### Tenants (`/tenants`)
 
-| Method | Endpoint       | Description                     | Auth required |
-| ------ | -------------- | -------------------------------- | -------------- |
-| POST   | `/tenants`     | Create a tenant                  | Admin          |
-| GET    | `/tenants`     | List tenants                     | No             |
-| GET    | `/tenants/:id` | Get a tenant by ID                | Admin          |
-| PATCH  | `/tenants/:id` | Update a tenant                  | Admin          |
-| DELETE | `/tenants/:id` | Delete a tenant                  | Admin          |
+| Method | Endpoint       | Description        | Auth required |
+| ------ | -------------- | ------------------ | ------------- |
+| POST   | `/tenants`     | Create a tenant    | Admin         |
+| GET    | `/tenants`     | List tenants       | No            |
+| GET    | `/tenants/:id` | Get a tenant by ID | Admin         |
+| PATCH  | `/tenants/:id` | Update a tenant    | Admin         |
+| DELETE | `/tenants/:id` | Delete a tenant    | Admin         |
 
 ## Roles
 
