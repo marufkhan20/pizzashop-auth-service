@@ -1,0 +1,24 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "admin-user",
+    "cors",
+    "feature1",
+    "main",
+    "update-readme"
+  ],
+  "parent": {
+    "admin-user": "main",
+    "cors": "main",
+    "feature1": "main",
+    "main": null,
+    "update-readme": "main"
+  },
+  "order": [
+    "main",
+    "admin-user",
+    "cors",
+    "feature1",
+    "update-readme"
+  ]
+}
