@@ -1,4 +1,5 @@
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import express, {
   type NextFunction,
   type Request,
@@ -6,6 +7,7 @@ import express, {
 } from "express";
 import type { HttpError } from "http-errors";
 import "reflect-metadata";
+import { Config } from "./config/index.ts";
 import logger from "./config/logger.ts";
 import authRouter from "./routes/auth.ts";
 import tenantRouter from "./routes/tenant.ts";
@@ -13,6 +15,12 @@ import userRouter from "./routes/user.ts";
 
 const app = express();
 
+app.use(
+  cors({
+    origin: Config.CLIENT_ORIGIN,
+    credentials: true,
+  }),
+);
 app.use(express.static("public", { dotfiles: "allow" }));
 app.use(express.json());
 app.use(cookieParser());
