@@ -23,6 +23,7 @@ const {
   ADMIN_PASSWORD,
   ADMIN_FIRST_NAME,
   ADMIN_LAST_NAME,
+  CLIENT_ORIGIN,
 } = process.env;
 
 const requiredEnvVars = {
@@ -38,6 +39,7 @@ const requiredEnvVars = {
   ADMIN_PASSWORD,
   ADMIN_FIRST_NAME,
   ADMIN_LAST_NAME,
+  CLIENT_ORIGIN,
 };
 
 for (const [key, value] of Object.entries(requiredEnvVars)) {
@@ -46,8 +48,18 @@ for (const [key, value] of Object.entries(requiredEnvVars)) {
   }
 }
 
+let clientOrigins: string[];
+try {
+  clientOrigins = JSON.parse(CLIENT_ORIGIN as string);
+} catch {
+  throw new Error(
+    'CLIENT_ORIGIN must be a JSON array of origins, e.g. ["http://localhost:5173"]',
+  );
+}
+
 export const Config = {
   PORT,
   NODE_ENV,
   ...(requiredEnvVars as Record<keyof typeof requiredEnvVars, string>),
+  CLIENT_ORIGIN: clientOrigins,
 };

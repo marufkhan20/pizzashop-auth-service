@@ -15,8 +15,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=dev tsx watch src/server.ts",
-    "build": "rimraf dist && tsc",
+    "dev": "node api.js && cross-env NODE_ENV=dev tsx watch src/server.ts",
+    "build": "node api.js && rimraf dist && tsc",
     "format:fix": "prettier . --write",
     "format:check": "prettier . --check",
     "lint": "eslint .",
@@ -25,7 +25,7 @@
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --no-cache --coverage --all --runInBand",
     "test:watch": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watch --runInBand",
     "prepare": "husky",
-    "start": "tsx src/index.ts",
+    "start": "node api.js && tsx src/index.ts",
     "migration:generate": "node scripts/generateMigration.js",
     "migration:run": "typeorm-ts-node-esm migration:run",
     "migration:create": "typeorm-ts-node-esm migration:create"
@@ -34,6 +34,7 @@
     "@eslint/js": "^10.0.1",
     "@types/bcrypt": "^6.0.0",
     "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/express-validator": "^2.20.33",
     "@types/http-errors": "^2.0.5",
@@ -66,6 +67,7 @@
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-jwt": "^8.5.1",
